@@ -1,0 +1,44 @@
+const { AttachmentBuilder } = require("discord.js");
+const fs = require("fs");
+const path = require("path");
+
+const IMAGE_DIR = "C:/Users/dde/Pictures";
+
+function getImageFiles(dir) {
+  let results = [];
+
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      results = results.concat(getImageFiles(fullPath));
+    } else {
+      const ext = path.extname(entry.name).toLowerCase();
+      if (ext === ".png" || ext === ".webp" || ext === ".jpg" || ext === ".jpeg") {
+        results.push(fullPath);
+      }
+    }
+  }
+
+  return results;
+}
+
+const files = getImageFiles(IMAGE_DIR);
+
+module.exports = {
+  args: null,
+  description: "Sends a random image from the computer!",
+  async execute({ message }) {
+    const randomFile = files[Math.floor(Math.random() * files.length)];
+    const attachment = new AttachmentBuilder(randomFile, {
+      name: path.basename(randomFile),
+    });
+
+    const me = await message.reply("ok im sending");
+    await me.edit({
+      content: "",
+      files: [attachment],
+      allowedMentions: { parse: [] },
+    });
+  },
+};

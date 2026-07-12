@@ -1,0 +1,47 @@
+const { AttachmentBuilder } = require("discord.js");
+const { spawn } = require("child_process");
+const path = require("path");
+const fs = require("fs");
+const { Text } = require("../../args.js");
+
+module.exports = {
+  description: "Generate TTS using my voice (do something bad and I will kill you)",
+  args: [new Text({ optional: false, rest: true })],
+  async execute({ message, args }) {
+    const text = args[0];
+    if (!text) return message.reply("type something stupid");
+
+    console.info(message.author.tag + " is generating audio (ddetalk)");
+    const statusMsg = await message.reply("generating voice... please wait");
+
+    try {
+      const url = `http://127.0.0.1:8670/generate?text=${encodeURIComponent(text.trim())}`;
+      const response = await fetch(url);
+      
+      if (!response.ok) throw new Error("Server not responding");
+      
+      const data = await response.json();
+
+      if (data.status === "success") {
+        const attachment = new AttachmentBuilder(data.full_path, {
+          name: data.file_name,
+        });
+
+        await message.reply({
+          content: `<@${message.author.id}>`,
+          files: [attachment],
+        });
+
+        statusMsg.delete().catch(() => null);
+
+        if (fs.existsSync(data.full_path)) s.unlinkSync(data.full_path);
+      } else {
+        console.error(`FastAPI Error: ${data.details}`);
+        statusMsg.edit("Error: The AI server encountered an issue.");
+      }
+    } catch (err) {
+      console.error(`Connection Error: ${err.message}`);
+      statusMsg.edit("could not connect to the AI server");
+    }
+  },
+};
