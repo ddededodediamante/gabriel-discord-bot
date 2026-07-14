@@ -17,7 +17,7 @@ const DENSITY = {
   [LAVA]: 1,
   [SAND]: 2,
   [OBSIDIAN]: 3,
-  [ACID]: 4
+  [ACID]: 67,
 };
 
 const is = (a, b) => {
@@ -65,16 +65,13 @@ class PowderSim {
     const one = this.get(x1, y1);
     const two = this.get(x2, y2);
 
-    const isAcidInvolved = (one === ACID || two === ACID) && one !== two;
-    const isSolidInvolved = is(one, "solid") || is(two, "solid");
-    const other = one === ACID ? two : one;
-
     if (
-      !isSolidInvolved &&
-      isAcidInvolved &&
+      one !== two &&
       one !== 0 &&
       two !== 0 &&
-      DENSITY[ACID] > DENSITY[other]
+      !is(one, "solid") &&
+      !is(two, "solid") &&
+      (one === ACID || two === ACID)
     ) {
       this.set(x1, y1, 0);
       this.set(x2, y2, 0);
@@ -118,13 +115,15 @@ class PowderSim {
           const dir = Math.random() < 0.5 ? -1 : 1;
 
           const diag = this.get(x + dir, y + 1);
-          if (DENSITY[type] > DENSITY[diag]) {
+          const side = this.get(x + dir, y);
+          if (!is(side, "solid") && DENSITY[type] > DENSITY[diag]) {
             this.swap(x, y, x + dir, y + 1);
             moved++;
             continue;
           }
           const diag2 = this.get(x - dir, y + 1);
-          if (DENSITY[type] > DENSITY[diag2]) {
+          const side2 = this.get(x - dir, y);
+          if (!is(side2, "solid") && DENSITY[type] > DENSITY[diag2]) {
             this.swap(x, y, x - dir, y + 1);
             moved++;
             continue;

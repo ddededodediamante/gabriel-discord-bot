@@ -139,7 +139,10 @@ module.exports = {
         });
       } catch (err) {
         console.error(err);
-        message.reply("error running command:\n```\n" + (err?.message || err) + "\n```");
+
+        let msg = String(err?.message || err);
+        if (msg.startsWith("Connect Timeout Error")) msg = "AAHHHH!!!!";
+        message.reply("error running command:\n```\n" + msg + "\n```");
       }
     }
   },

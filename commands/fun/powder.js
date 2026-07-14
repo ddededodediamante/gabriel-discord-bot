@@ -5,8 +5,11 @@ const PowderSim = require("../../functions/powder.js");
 const { Attachment } = require("../../args.js");
 const { random, getAttachments } = require("../../utils.js");
 
-function getDistance(r1, g1, b1, r2, g2, b2) {
-  return Math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2);
+function perceptualDistance(xr, xg, xb, yr, yg, yb) {
+  const dr = xr - yr;
+  const dg = xg - yg;
+  const db = xb - yb;
+  return Math.sqrt(dr * dr * 0.2125 + dg * dg * 0.7154 + db * db * 0.0721);
 }
 
 const sand = 1;
@@ -57,8 +60,7 @@ module.exports = {
     tempCtx.drawImage(img, 0, 0, width, height);
     const imgData = tempCtx.getImageData(0, 0, width, height).data;
 
-    const threshold = 95;
-    const elements = [sand, water, lava, obsidian, acid];
+    const elements = [0, sand, water, lava, obsidian, acid];
 
     for (let i = 0; i < width * height; i++) {
       const r = imgData[i * 4];
@@ -66,10 +68,10 @@ module.exports = {
       const b = imgData[i * 4 + 2];
 
       let bestElement = null;
-      let minDistance = threshold;
+      let minDistance = 95;
 
       for (const element of elements) {
-        const dist = getDistance(r, g, b, ...colors[element]);
+        const dist = perceptualDistance(r, g, b, ...colors[element]);
 
         if (dist < minDistance) {
           minDistance = dist;
@@ -77,7 +79,7 @@ module.exports = {
         }
       }
 
-      if (bestElement !== null) {
+      if (bestElement !== null && bestElement !== 0) {
         sim.set(i % width, Math.floor(i / width), bestElement);
       }
     }

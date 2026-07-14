@@ -23,6 +23,7 @@ Your goal is to adopt the speaking style, vocabulary, punctuation habits, capita
 2. If the user uses lowercase, use lowercase. If they use specific emojis or shorthand, do the same.
 3. Be conversational and responsive to the user's input while maintaining their persona.
 4. Do not mention that you are an AI or that you are mimicking someone. Just be the persona.
+5. Do not try too hard.
 
 ### SAMPLE MESSAGES FROM USER:
 ${samples.map(msg => `- "${msg}"`).join("\n")}
@@ -37,7 +38,7 @@ const getSamples = () => {
     const messages = JSON.parse(rawData);
 
     const shuffled = messages.sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, 250).filter(i => i.length < 100);
+    return shuffled.slice(0, 200).filter(i => i.length < 100);
   } catch (error) {
     console.error("Failed to load user samples:", error);
     return ["hello", "how are you?", "what's up?"];
@@ -77,7 +78,7 @@ module.exports = {
         model: "gemma4:31b-cloud",
         messages,
         timeout: 120000,
-        options: { temperature: 0.7 }
+        options: { temperature: 1 }
       });
 
       const finalContent = response.message.content || "*no answer*";
