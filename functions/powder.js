@@ -17,7 +17,7 @@ const DENSITY = {
   [LAVA]: 1,
   [SAND]: 2,
   [OBSIDIAN]: 3,
-  [ACID]: 67,
+  [ACID]: 67
 };
 
 const is = (a, b) => {
@@ -59,26 +59,28 @@ class PowderSim {
       y2 < 0 ||
       y2 >= this.height
     ) {
-      return;
+      return false;
     }
 
     const one = this.get(x1, y1);
     const two = this.get(x2, y2);
 
-    if (
-      one !== two &&
-      one !== 0 &&
-      two !== 0 &&
-      !is(one, "solid") &&
-      !is(two, "solid") &&
-      (one === ACID || two === ACID)
-    ) {
+    if (is(one, "solid") || is(two, "solid")) {
+      return false;
+    }
+
+    if (one === two) {
+      return false;
+    }
+
+    if (one !== 0 && two !== 0 && (one === ACID || two === ACID)) {
       this.set(x1, y1, 0);
       this.set(x2, y2, 0);
     } else {
       this.set(x1, y1, two);
       this.set(x2, y2, one);
     }
+    return true;
   }
 
   step() {
@@ -99,8 +101,7 @@ class PowderSim {
         const below = this.get(x, y + 1);
 
         if (!powder && below === 0) {
-          this.swap(x, y, x, y + 1);
-          moved++;
+          if (this.swap(x, y, x, y + 1)) moved++;
           continue;
         }
 
@@ -117,15 +118,13 @@ class PowderSim {
           const diag = this.get(x + dir, y + 1);
           const side = this.get(x + dir, y);
           if (!is(side, "solid") && DENSITY[type] > DENSITY[diag]) {
-            this.swap(x, y, x + dir, y + 1);
-            moved++;
+            if (this.swap(x, y, x + dir, y + 1)) moved++;
             continue;
           }
           const diag2 = this.get(x - dir, y + 1);
           const side2 = this.get(x - dir, y);
           if (!is(side2, "solid") && DENSITY[type] > DENSITY[diag2]) {
-            this.swap(x, y, x - dir, y + 1);
-            moved++;
+            if (this.swap(x, y, x - dir, y + 1)) moved++;
             continue;
           }
         }
@@ -135,21 +134,18 @@ class PowderSim {
 
           const diag = this.get(x + dir, y);
           if (DENSITY[type] > DENSITY[diag]) {
-            this.swap(x, y, x + dir, y);
-            moved++;
+            if (this.swap(x, y, x + dir, y)) moved++;
             continue;
           }
           const diag2 = this.get(x - dir, y);
           if (DENSITY[type] > DENSITY[diag2]) {
-            this.swap(x, y, x - dir, y);
-            moved++;
+            if (this.swap(x, y, x - dir, y)) moved++;
             continue;
           }
         }
 
         if (DENSITY[type] > DENSITY[below]) {
-          this.swap(x, y, x, y + 1);
-          moved++;
+          if (this.swap(x, y, x, y + 1)) moved++;
           continue;
         }
       }
