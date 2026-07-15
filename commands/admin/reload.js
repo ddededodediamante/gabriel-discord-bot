@@ -39,16 +39,18 @@ module.exports = {
       reloadEvents();
 
       // mister mc macenstein
+      // very hardcoded, you probably don't need this
+      if (client.user.id !== "1455453433565020306") {
+        const {
+          interval: oldInterval
+        } = require("../../functions/mister-mc-macenstein.js");
+        clearInterval(oldInterval);
 
-      const {
-        interval: oldInterval
-      } = require("../../functions/mister-mc-macenstein.js");
-      clearInterval(oldInterval);
+        clearCache("../../functions/mister-mc-macenstein.js");
 
-      clearCache("../../functions/mister-mc-macenstein.js");
-
-      const { startInterval } = require("../../functions/mister-mc-macenstein.js");
-      startInterval();
+        const { startInterval } = require("../../functions/mister-mc-macenstein.js");
+        startInterval();
+      }
 
       const runInput = args[0];
       if (!runInput) {
@@ -66,7 +68,9 @@ module.exports = {
 
       const parsed = parseCommandArgs(cmd.args, tokens.slice(1));
       if (!parsed.ok) {
-        return message.reply("✅ Reloaded, but bad args for `" + cmdName + "`: " + parsed.error);
+        return message.reply(
+          "✅ Reloaded, but bad args for `" + cmdName + "`: " + parsed.error
+        );
       }
 
       await cmd.execute({ message, args: parsed.args, client, config, isAdmin });

@@ -1,3 +1,9 @@
+/*
+DISCLOSURE: Some parts of this file were AI generated,
+but they were manually tested and modified afterwards. 🧨🧨🧨
+Sorry
+*/
+
 /**
  * @typedef {{ ok: true, value: any } | { ok: false, error: string }} ParseResult
  */
@@ -246,7 +252,6 @@ function parseCommandArgs(argDefs, tokens) {
     const def = argDefs[i];
     const label = `argument ${i + 1}: \`${def.describe()}\``;
 
-    // Rest string: gobble all remaining tokens as a single joined string
     if (def instanceof Text && def.rest) {
       if (ti >= tokens.length) {
         if (def.optional) {
@@ -263,7 +268,6 @@ function parseCommandArgs(argDefs, tokens) {
       continue;
     }
 
-    // Normal single-token argument
     if (ti >= tokens.length) {
       if (def.optional) {
         result.push(def.default ?? null);
