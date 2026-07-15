@@ -2,6 +2,7 @@ const { Text } = require("../../args.js");
 const { client } = require("../../index.js");
 const { loadFeatures, incrementAIUsage, getUserSettings } = require("../../databases.js");
 const OllamaChat = require("ollama-chatting");
+const { ollamaSemaphore } = require("../../utils.js");
 const { User } = require("discord.js");
 
 /**
@@ -80,6 +81,13 @@ module.exports = {
       { role: "user", content: funnyMode ? question.slice(12) : question }
     ];
 
+    if (ollamaSemaphore.count >= ollamaSemaphore.max) {
+      await message.reply("I-I can't handle this right now...");
+      clear();
+      clearTimeout(fallback);
+      return;
+    }
+    await ollamaSemaphore.acquire();
     try {
       const ollamaChat = new OllamaChat();
       const response = await ollamaChat.chat({
@@ -107,6 +115,7 @@ module.exports = {
       console.error(error);
       await message.reply("i had trouble connecting to the ai");
     } finally {
+      ollamaSemaphore.release();
       clear();
       clearTimeout(fallback);
     }

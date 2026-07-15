@@ -35,8 +35,36 @@ function random(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+class Semaphore {
+  constructor(max) {
+    this.max = max;
+    this.count = 0;
+    this.queue = [];
+  }
+  acquire() {
+    return new Promise(resolve => {
+      if (this.count < this.max) {
+        this.count++;
+        resolve();
+      } else {
+        this.queue.push(resolve);
+      }
+    });
+  }
+  release() {
+    if (this.queue.length > 0) {
+      this.queue.shift()();
+    } else {
+      this.count--;
+    }
+  }
+}
+
+const ollamaSemaphore = new Semaphore(2);
+
 module.exports = {
   getAttachments,
   hasBadWords,
-  random
+  random,
+  ollamaSemaphore
 };

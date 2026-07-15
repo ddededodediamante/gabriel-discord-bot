@@ -68,7 +68,7 @@ module.exports = {
       const b = imgData[i * 4 + 2];
 
       let bestElement = null;
-      let minDistance = 95;
+      let minDistance = 105;
 
       for (const element of elements) {
         const dist = perceptualDistance(r, g, b, ...colors[element]);
@@ -79,7 +79,7 @@ module.exports = {
         }
       }
 
-      if (bestElement !== null && bestElement !== 0) {
+      if (bestElement !== null) {
         sim.set(i % width, Math.floor(i / width), bestElement);
       }
     }
@@ -91,7 +91,7 @@ module.exports = {
     const scaledH = height * scale;
     const index = new Uint8Array(scaledW * scaledH);
 
-    const maxFrames = 110;
+    const maxFrames = 150;
     let inactiveFrames = 0;
 
     for (let f = 0; f < maxFrames; f++) {
@@ -99,10 +99,10 @@ module.exports = {
       sim.step();
       const moved = sim.step();
 
-      if (moved < 7) inactiveFrames++;
+      if (moved < 20) inactiveFrames++;
       else inactiveFrames = 0;
 
-      if (inactiveFrames >= 20) break;
+      if (inactiveFrames >= 10) break;
 
       for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {

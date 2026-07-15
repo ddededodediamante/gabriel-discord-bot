@@ -1,7 +1,8 @@
 const { spawn } = require("child_process");
+const { config } = require("./databases.js");
 
-const OLLAMA_BIN = "C:\\Users\\dde\\AppData\\Local\\Programs\\Ollama\\ollama.exe";
-const OLLAMA_HOST = "http://localhost:11434";
+const OLLAMA_BIN = config?.ollamaBin ?? false;
+const OLLAMA_HOST = config?.ollamaHost || "http://localhost:11434";
 
 async function isRunning() {
   try {
@@ -15,6 +16,8 @@ async function isRunning() {
 module.exports = {
   description: "Start Ollama if it isn't already running",
   async execute({ message }) {
+    if (OLLAMA_BIN === false) return await message.reply("ollama bin config is missing");
+
     const reply = await message.reply("checking if ollama is running...");
 
     if (await isRunning()) {

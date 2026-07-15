@@ -16,8 +16,8 @@ const DENSITY = {
   [WATER]: 1,
   [LAVA]: 1,
   [SAND]: 2,
-  [OBSIDIAN]: 3,
-  [ACID]: 67
+  [ACID]: 3,
+  [OBSIDIAN]: 4
 };
 
 const is = (a, b) => {

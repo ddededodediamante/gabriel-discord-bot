@@ -8,7 +8,7 @@ module.exports = {
   description: "Get a random number in base 36",
   execute({ message, args }) {
     message.reply({
-      content: random(Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER).toString(36),
+      content: random(1, Number.MAX_SAFE_INTEGER).toString(36),
       allowedMentions: { parse: [] }
     });
   }

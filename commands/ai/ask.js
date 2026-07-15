@@ -4,7 +4,7 @@ const { loadFeatures, incrementAIUsage, getUserSettings } = require("../../datab
 const OllamaChat = require("ollama-chatting");
 const { AttachmentBuilder, EmbedBuilder, User } = require("discord.js");
 const path = require("path");
-const { getAttachments } = require("../../utils.js");
+const { getAttachments, ollamaSemaphore } = require("../../utils.js");
 
 /**
  * @param {User} user
@@ -333,6 +333,12 @@ module.exports = {
       }
     ];
 
+    if (ollamaSemaphore.count >= ollamaSemaphore.max) {
+      await message.reply("I-I can't handle this right now...");
+      clear();
+      return;
+    }
+    await ollamaSemaphore.acquire();
     try {
       const response = await ollamaChat.chat({
         model: "gemma4:31b-cloud",
@@ -362,6 +368,7 @@ module.exports = {
       console.error(error);
       await reply("i had trouble connecting to the ai");
     } finally {
+      ollamaSemaphore.release();
       clear();
     }
   }

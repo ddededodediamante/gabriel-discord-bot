@@ -1,5 +1,5 @@
 const { Text, Attachment } = require("../../args.js");
-const { getAttachments, hasBadWords } = require("../../utils.js");
+const { getAttachments, hasBadWords, ollamaSemaphore } = require("../../utils.js");
 const { loadFeatures, incrementAIUsage } = require("../../databases.js");
 const OllamaChat = require("ollama-chatting");
 const { AttachmentBuilder } = require("discord.js");
@@ -36,6 +36,8 @@ module.exports = {
       return message.reply("wait for the current request to finish");
     } else if (cooldowns.size >= 3) {
       return message.reply("give me a BREAK");
+    } else if (ollamaSemaphore.count >= ollamaSemaphore.max) {
+      return await message.reply("I-I can't handle this right now...");
     }
 
     cooldowns.set(message.author.id, true);
@@ -84,6 +86,7 @@ module.exports = {
 
     const messages = [{ role: "system", content: system }, userMessage];
 
+    await ollamaSemaphore.acquire();
     try {
       const ollamaChat = new OllamaChat();
       const response = await ollamaChat.chat({
@@ -101,11 +104,17 @@ module.exports = {
           "won't fulfill"
         ];
         const denied = deniedArr.some(i => content.includes(i));
-        return initialReply.edit(
+        await message.reply(
           denied
             ? "the ai didn't like your request"
             : "the ai didn't generate a valid svg"
         );
+        try {
+          await initialReply.delete();
+        } catch (_) {
+          /* empty */
+        }
+        return;
       }
 
       const svgContent = svgMatch[1].trim();
@@ -124,15 +133,26 @@ module.exports = {
       const attachmentSVG = new AttachmentBuilder(svgBuffer, {
         name: "drawing.svg"
       });
-      await initialReply.edit({ content: "", files: [attachmentPNG, attachmentSVG] });
+      await message.reply({ content: "", files: [attachmentPNG, attachmentSVG] });
+      try {
+        await initialReply.delete();
+      } catch (_) {
+        /* empty */
+      }
     } catch (error) {
       const err = String(error.message || error);
       const isCorrupt = err.toLowerCase().includes("corrupt header");
       if (!isCorrupt) console.error(error);
-      await initialReply.edit(
+      await message.reply(
         isCorrupt ? `the ai didn't generate a valid svg` : "i had trouble drawing that"
       );
+      try {
+        await initialReply.delete();
+      } catch (_) {
+        /* empty */
+      }
     } finally {
+      ollamaSemaphore.release();
       clear();
     }
   }
