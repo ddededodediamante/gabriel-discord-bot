@@ -50,9 +50,13 @@ client.getEmoji = (emojiName, fallback = "❓") => {
 client.once(Events.ClientReady, async () => {
   console.log(`✅ logged in as ${client.user.tag}`);
 
-  const { startInterval } = require("./functions/mister-mc-macenstein.js");
   reloadEvents();
-  startInterval();
+
+  // very hardcoded, you probably don't need this
+  if (client.user.id !== "1455453433565020306") {
+    const { startInterval } = require("./functions/mister-mc-macenstein.js");
+    startInterval();
+  }
 
   await client.application.emojis.fetch();
 });
