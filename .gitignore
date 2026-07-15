@@ -2,3 +2,4 @@ node_modules
 tmp
 voice/
 databases/
+commands/ai/dde-ai.js
