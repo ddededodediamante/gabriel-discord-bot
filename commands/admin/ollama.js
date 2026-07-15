@@ -1,5 +1,5 @@
 const { spawn } = require("child_process");
-const { config } = require("./databases.js");
+const { config } = require("../../databases");
 
 const OLLAMA_BIN = config?.ollamaBin ?? false;
 const OLLAMA_HOST = config?.ollamaHost || "http://localhost:11434";

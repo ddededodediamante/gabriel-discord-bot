@@ -3,3 +3,4 @@ tmp
 voice/
 databases/
 commands/ai/dde-ai.js
+commands/admin/slowassmodel.js
