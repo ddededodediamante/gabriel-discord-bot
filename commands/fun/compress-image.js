@@ -25,6 +25,10 @@ module.exports = {
       return message.reply("that doesn't look like an image");
     }
 
+    if (attachment.size > 7 * 1024 * 1024) {
+      return message.reply("image too big (>7MB)");
+    }
+
     const reply = await message.reply("downloading...");
 
     const inputBuffer = await new Promise((resolve, reject) => {

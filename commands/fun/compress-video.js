@@ -8,11 +8,17 @@ const path = require("path");
 const { execFile } = require("child_process");
 const https = require("https");
 
+const activeRequests = new Set();
+
 module.exports = {
   args: [new Text({ optional: true, default: "high" })],
   aliases: ["compress"],
   description: "Compress a video into oblivion",
   async execute({ message, args }) {
+    if (activeRequests.has(message.author.id)) {
+      return message.reply("shut up and come back later");
+    }
+
     const [level] = args;
     const levels = ["AHHH!!!", "highest", "higher", "high", "medium", "low"];
     const levelConfigs = {
@@ -67,6 +73,13 @@ module.exports = {
 
     const attachment = (await getAttachments(message))[0];
     if (!attachment) return message.reply("i need a video");
+
+    activeRequests.add(message.author.id);
+
+    if (attachment.size > 15 * 1024 * 1024) {
+      activeRequests.delete(message.author.id);
+      return message.reply("video too big (>15MB)");
+    }
 
     const validTypes = ["video/mp4", "video/webm", "video/quicktime", "video/x-matroska"];
     if (!validTypes.some(t => attachment.contentType?.startsWith(t))) {
@@ -123,6 +136,7 @@ module.exports = {
       console.error(err);
       await reply.edit("ffmpeg exploded: " + err.message);
       fs.rmSync(inputPath, { force: true });
+      activeRequests.delete(message.author.id);
       throw err;
     });
 
@@ -146,5 +160,6 @@ module.exports = {
 
     fs.rmSync(inputPath, { force: true });
     fs.rmSync(outputPath, { force: true });
+    activeRequests.delete(message.author.id);
   }
 };
