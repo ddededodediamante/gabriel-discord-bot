@@ -51,6 +51,7 @@ module.exports = {
 
       const title = [`Help: ${query}`];
       if (cmd.adminOnly) title.push("👑");
+      else if (cmd.hidden) title.push("🤫");
       if (cmd._aliasOf) title.push(`(alias of ${cmd._aliasOf})`);
 
       const embed = new EmbedBuilder()
@@ -77,7 +78,7 @@ module.exports = {
     }
 
     const publicCommands = Object.entries(commands).filter(
-      ([, cmd]) => cmd.adminOnly !== true && !cmd._aliasOf
+      ([, cmd]) => cmd.adminOnly !== true && cmd.hidden !== true && !cmd._aliasOf
     );
 
     const byCategory = new Map();

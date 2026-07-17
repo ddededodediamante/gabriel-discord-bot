@@ -4,3 +4,5 @@ voice/
 databases/
 commands/ai/dde-ai.js
 commands/admin/slowassmodel.js
+commands/fun/tuff-pfp.js
+commands/fun/tuffest-pfp.js

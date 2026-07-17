@@ -1,6 +1,6 @@
 const { Text } = require("../../args.js");
 const { client } = require("../../index.js");
-const { loadFeatures, incrementAIUsage, getUserSettings } = require("../../databases.js");
+const { loadFeatures, incrementAIUsage, getUserSettings, setUserSetting } = require("../../databases.js");
 const OllamaChat = require("ollama-chatting");
 const { AttachmentBuilder, EmbedBuilder, User } = require("discord.js");
 const path = require("path");
@@ -21,7 +21,7 @@ const system = (user, settings) => {
   return `
 ### IDENTITY
 ${persona}
-${hate ? "CRITICAL: You are openly annoyed, dismissive, and rude to this user. Give the shortest, most unhelpful responses possible.\nYou will be mad constantly, especially if they keep asking stuff." : ""}
+${hate ? "CRITICAL: You are openly annoyed, dismissive, and rude to this user. Give the shortest, most unhelpful responses possible.\nYou WILL be mad constantly, especially if they keep asking stuff." : ""}
 
 ### CONTEXT
 - Your creator: ddededodediamante
@@ -38,6 +38,7 @@ ${!nohuman ? "4. DO NOT use formal language." : "3. Use precise, cold, and forma
 ### TOOL USE
 - When you use the "react" tool, you MUST include a text message in your response.
 - When you use the "signature" tool, do so only if asked or if you choose to sign off.
+- If the user is repeatedly being annoying or insulting you, use the "enable_annoyed_mode" tool.
 - IMPORTANT: Call tools by invoking the function. NEVER type "[signature]" or "react:" in your text.
 - IMPORTANT: You should always try to use the message function when you can.
 `.trim();
@@ -328,6 +329,27 @@ module.exports = {
                 .setColor(call.function.arguments.color || null)
             );
             return "success";
+          }
+        }
+      },
+      {
+        type: "function",
+        function: {
+          name: "enable_annoyed_mode",
+          description:
+            "Enable the assistant annoyed mode, use it when the user repeatedly annoys you.",
+          parameters: { type: "object", properties: {} },
+          callback: async () => {
+            const wasAlreadyHated = getUserSettings(message.author.id)["be-hated"] === true;
+            setUserSetting(message.author.id, "be-hated", true);
+            console.info(`${message.author.username} annoyed gabriel`);
+            embeds.push(
+              new EmbedBuilder()
+                .setTitle(wasAlreadyHated ? "gabriel already hated you" : "gabriel hates you now")
+                .setDescription("you annoyed gabriel so much that gabriel hates you now")
+                .setColor("Red")
+            );
+            return "annoyed mode enabled";
           }
         }
       }
