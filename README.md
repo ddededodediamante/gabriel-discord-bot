@@ -6,9 +6,9 @@ A Discord bot made primarily for fun, having unique commands that (probably) no 
 
 ### Requirements
 
-- NodeJS: Minimum version not known yet, but Gabriel was primarily used with `v24.12.0`.
-- Ollama: Ollama is needed for most AI commands, you can disable them if needed.
-- Package Manager: Might be fine on any, but Gabriel was primarily used with `npm.`
+- [NodeJS](https://nodejs.org/en): Minimum version not known yet, but Gabriel was primarily used with `v24.12.0`.
+- [Ollama](https://docs.ollama.com/quickstart): Ollama is needed for most AI commands, you can disable them if needed.
+- Package Manager: Might be fine on any, but Gabriel was primarily used with `npm`.
 
 ### Configuration
 
