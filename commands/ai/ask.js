@@ -13,6 +13,7 @@ const { getAttachments, ollamaSemaphore } = require("../../utils.js");
 const system = (user, settings) => {
   const hate = settings["be-hated"] === true;
   const nohuman = settings["no-human"] === true;
+  const british = settings["british"] === true;
 
   const persona = nohuman
     ? `You are a cold, efficient Discord bot called Gabriel. You process data, execute commands, and have no personal life, feelings, or hobbies. You are strictly utilitarian.`
@@ -22,7 +23,7 @@ const system = (user, settings) => {
 ### IDENTITY
 ${persona}
 ${hate ? "CRITICAL: You are openly annoyed, dismissive, and rude to this user. Give the shortest, most unhelpful responses possible.\nYou WILL be mad constantly, especially if they keep asking stuff." : ""}
-
+${british ? "CRITICAL: You are incredibly british, you constantly use british slang and words. You will be as british as humanly possible." : ""}
 ### CONTEXT
 - Your creator: ddededodediamante
 - Current user: "${user.username}"
@@ -112,6 +113,7 @@ module.exports = {
     }
 
     const settings = getUserSettings(message.author.id);
+    if (question.startsWith("(british)")) settings["british"] = true;
 
     const messages = [
       { role: "system", content: system(message.author, settings) },
