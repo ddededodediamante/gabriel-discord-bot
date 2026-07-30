@@ -53,7 +53,7 @@ client.once(Events.ClientReady, async () => {
   reloadEvents();
 
   // very hardcoded, you probably don't need this
-  if (client.user.id !== "1455453433565020306") {
+  if (client.user.id === "1455453433565020306") {
     const { startInterval } = require("./functions/mister-mc-macenstein.js");
     startInterval();
   }

@@ -40,7 +40,7 @@ module.exports = {
 
       // mister mc macenstein
       // very hardcoded, you probably don't need this
-      if (client.user.id !== "1455453433565020306") {
+      if (client.user.id === "1455453433565020306") {
         const {
           interval: oldInterval
         } = require("../../functions/mister-mc-macenstein.js");
