@@ -20,7 +20,7 @@ const people = {
 
 module.exports = {
   args: [new User()],
-  alias: ["is-furry"],
+  aliases: ["is-furry"],
   description: "Detects if a user is a furry with incredible accuracy",
   async execute({ message, args }) {
     const [userId] = args;

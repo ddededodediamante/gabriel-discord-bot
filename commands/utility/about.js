@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const os = require("os");
 const { execSync } = require("child_process");
+const { client } = require("../..");
 
 function getCpuUsage() {
   const cpus = os.cpus();
@@ -76,6 +77,7 @@ module.exports = {
     const embed = new EmbedBuilder()
       .setTitle("Gabriel Information")
       .setColor("Yellow")
+      .setFooter({ text: `i'm in about ${client.guilds.cache.size} servers` })
       .addFields(
         {
           name: "System",

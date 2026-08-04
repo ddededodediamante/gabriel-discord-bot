@@ -8,11 +8,14 @@ const DEFAULT_USER_SETTINGS = {
   "no-reply": false,
   "no-human": false
 };
+const DEFAULT_SERVER_SETTINGS = {
+  "disable-ai": false
+};
 const DATABASES_PATH = path.join(__dirname, "databases");
 const CONFIG_PATH = path.join(DATABASES_PATH, "config.json");
 const FEATURES_PATH = path.join(DATABASES_PATH, "features.json");
-const AI_USAGE_PATH = path.join(DATABASES_PATH, "ai-usage.json");
 const USER_SETTINGS_PATH = path.join(DATABASES_PATH, "user-settings.json");
+const SERVER_SETTINGS_PATH = path.join(DATABASES_PATH, "server-settings.json");
 
 function loadConfig() {
   if (!fs.existsSync(CONFIG_PATH)) {
@@ -34,37 +37,6 @@ function loadFeatures() {
 
 function saveFeatures(features) {
   fs.writeFileSync(FEATURES_PATH, JSON.stringify(features));
-}
-
-function loadAIUsage() {
-  if (!fs.existsSync(AI_USAGE_PATH)) {
-    fs.writeFileSync(AI_USAGE_PATH, "{}");
-    return {};
-  }
-  return JSON.parse(fs.readFileSync(AI_USAGE_PATH, "utf-8"));
-}
-
-function saveAIUsage(data) {
-  fs.writeFileSync(AI_USAGE_PATH, JSON.stringify(data, null, 2));
-}
-
-function incrementAIUsage(userId, username) {
-  const data = loadAIUsage();
-  if (!data[userId]) {
-    data[userId] = { username, count: 0 };
-  }
-  data[userId].username = username;
-  data[userId].count++;
-  saveAIUsage(data);
-  return data[userId].count;
-}
-
-function getTopAIUsers(limit = 10) {
-  const data = loadAIUsage();
-  return Object.entries(data)
-    .map(([id, info]) => ({ id, username: info.username, count: info.count }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, limit);
 }
 
 function loadUserSettings() {
@@ -96,6 +68,35 @@ function getUserSettings(userId) {
   return { ...DEFAULT_USER_SETTINGS, ...data[userId] };
 }
 
+function loadServerSettings() {
+  if (!fs.existsSync(SERVER_SETTINGS_PATH)) {
+    fs.writeFileSync(SERVER_SETTINGS_PATH, JSON.stringify({}));
+    return {};
+  }
+  return JSON.parse(fs.readFileSync(SERVER_SETTINGS_PATH, "utf-8"));
+}
+
+function saveServerSettings(data) {
+  fs.writeFileSync(SERVER_SETTINGS_PATH, JSON.stringify(data, null, 2));
+}
+
+function setServerSetting(guildId, key, value) {
+  const data = loadServerSettings();
+
+  if (!data[guildId]) {
+    data[guildId] = { ...DEFAULT_SERVER_SETTINGS };
+  }
+
+  data[guildId][key] = value;
+
+  saveServerSettings(data);
+}
+
+function getServerSettings(guildId) {
+  const data = loadServerSettings();
+  return { ...DEFAULT_SERVER_SETTINGS, ...data[guildId] };
+}
+
 /**
  * @param {import("discord.js").User | null | undefined} user
  * @returns {boolean}
@@ -109,12 +110,12 @@ module.exports = {
   isAdmin,
   loadFeatures,
   saveFeatures,
-  loadAIUsage,
-  saveAIUsage,
-  incrementAIUsage,
-  getTopAIUsers,
   loadUserSettings,
   saveUserSettings,
   setUserSetting,
-  getUserSettings
+  getUserSettings,
+  loadServerSettings,
+  saveServerSettings,
+  setServerSetting,
+  getServerSettings
 };

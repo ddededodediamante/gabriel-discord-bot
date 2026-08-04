@@ -1,6 +1,6 @@
 const { Text } = require("../../args.js");
 const { client } = require("../../index.js");
-const { loadFeatures, incrementAIUsage, getUserSettings, setUserSetting } = require("../../databases.js");
+const { loadFeatures, getUserSettings, setUserSetting } = require("../../databases.js");
 const OllamaChat = require("ollama-chatting");
 const { AttachmentBuilder, EmbedBuilder, User } = require("discord.js");
 const path = require("path");

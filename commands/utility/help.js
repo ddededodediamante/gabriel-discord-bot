@@ -41,6 +41,7 @@ module.exports = {
   helpPages,
   buildEmbed,
   buildRow,
+  aliases: ["?"],
   async execute({ message, args }) {
     const commands = require("../../commands.js");
     const query = args[0]?.toLowerCase();

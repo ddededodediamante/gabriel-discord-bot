@@ -7,7 +7,8 @@ const {
   loadFeatures,
   getUserSettings,
   loadUserSettings,
-  saveUserSettings
+  saveUserSettings,
+  getServerSettings
 } = require("./databases.js");
 const { client } = require("./index.js");
 const { helpPages, buildEmbed, buildRow } = require("./commands/utility/help.js");
@@ -51,7 +52,10 @@ module.exports = {
             }
             const features = loadFeatures();
             const userSettings = getUserSettings(message.author.id);
-            if (userSettings["no-reply"] !== true) {
+            const serverDisabled =
+              message.guild &&
+              getServerSettings(message.guild.id)["disable-ai"];
+            if (userSettings["no-reply"] !== true && !serverDisabled) {
               if (features["smart-ai"]) {
                 const askCmd = require("./commands/ai/ask.js");
                 const question = message.content
@@ -95,6 +99,12 @@ module.exports = {
         return message.reply("what does that mean");
       } else if (cmd.adminOnly && !isAdmin(message.author)) {
         return message.reply("no haha");
+      } else if (
+        cmd.category === "ai" &&
+        message.guild &&
+        getServerSettings(message.guild.id)["disable-ai"]
+      ) {
+        return message.reply("ai is disabled in this server");
       }
 
       let rawTokens = [];

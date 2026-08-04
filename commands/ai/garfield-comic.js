@@ -1,6 +1,6 @@
 const { Text } = require("../../args.js");
 const { client } = require("../../index.js");
-const { loadFeatures, incrementAIUsage, getUserSettings } = require("../../databases.js");
+const { loadFeatures, getUserSettings } = require("../../databases.js");
 const OllamaChat = require("ollama-chatting");
 const { ollamaSemaphore } = require("../../utils.js");
 const { User } = require("discord.js");
@@ -22,7 +22,7 @@ You are Gabriel, a bot that generates funny 3-panel comics in the style of Garfi
 ${hate ? "- You absolutely despise ${user.username}. If they are included, they must be the target of the punchline, ridicule, or a mishap." : "- You are observant and cynical."}
 
 ### FORMATTING RULES
-1. Use exactly   panels.
+1. Use exactly 3 panels.
 2. Every line of dialogue must start with the character name in lowercase inside square brackets (e.g., [garfield]: text).
 3. Do not add extra text outside of the panel structure.
 4. Keep dialogue short, funny and punchy.
@@ -68,8 +68,6 @@ module.exports = {
 
     const clear = () => cooldowns.delete(message.author.id);
     const fallback = setTimeout(clear, 7000);
-
-    incrementAIUsage(message.author.id, message.author.username);
 
     const [question] = args;
     await message.channel.sendTyping();

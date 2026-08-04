@@ -29,6 +29,7 @@ const colors = {
 module.exports = {
   args: [],
   description: "Runs a silly little powder simulator",
+  aliases: ["simulate"],
   async execute({ message, args }) {
     const scale = 3;
     const maxSize = 250;

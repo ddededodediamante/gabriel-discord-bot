@@ -1,6 +1,6 @@
 const { Text, Attachment } = require("../../args.js");
 const { getAttachments, hasBadWords, ollamaSemaphore } = require("../../utils.js");
-const { loadFeatures, incrementAIUsage } = require("../../databases.js");
+const { loadFeatures } = require("../../databases.js");
 const OllamaChat = require("ollama-chatting");
 const { AttachmentBuilder } = require("discord.js");
 const sharp = require("sharp");
@@ -27,7 +27,7 @@ const cooldowns = new Map();
 
 module.exports = {
   args: [new Text({ rest: true, max: 1670, optional: true })],
-  description: "Ask the AI to draw an image (optionally redraw an attached image)",
+  description: "Ask the NON-Image AI to draw an image (optionally redraw an attached image)",
   async execute({ message, args }) {
     const features = loadFeatures();
     if (!features["smart-ai"]) return await message.reply("no smart ai for now");
@@ -47,8 +47,6 @@ module.exports = {
     };
     const fallback = setTimeout(clear, 7000);
 
-    incrementAIUsage(message.author.id, message.author.username);
-
     const prompt = args[0];
     if (prompt && prompt != "" && hasBadWords(prompt)) return await message.reply("no");
 
@@ -56,6 +54,8 @@ module.exports = {
       role: "user",
       content: prompt || "Redraw this image in your own style"
     };
+
+    if (prompt && prompt != "") console.log(`[draw] ${message.author.username}: ${prompt}`);
 
     const attachments = await getAttachments(message);
     const imageAttachment = attachments.find(a => a.contentType?.startsWith("image/"));

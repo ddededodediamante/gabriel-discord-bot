@@ -16,7 +16,7 @@ function fnv1a(str) {
 
 module.exports = {
   args: [new Text({ rest: true })],
-  description: "Rates stuff based on something idk",
+  description: "Rates stuff based on cool math",
   execute({ message, args }) {
     const [thing] = args;
     const thingy = String(thing).toLowerCase();
