@@ -64,8 +64,6 @@ module.exports = {
     };
     const fallback = setTimeout(clear, 7000);
 
-    incrementAIUsage(message.author.id, message.author.username);
-
     const [question] = args;
     await message.channel.sendTyping();
 
