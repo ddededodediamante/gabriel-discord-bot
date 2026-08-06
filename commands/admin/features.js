@@ -4,6 +4,7 @@ const { loadFeatures, saveFeatures } = require("../../databases.js");
 module.exports = {
   args: [new Text({ rest: true, optional: true })],
   description: "View or toggle bot features",
+  extDescription: "View the current bot features, or toggle a feature on or off.",
   async execute({ message, args }) {
     const features = loadFeatures();
     const input = (args[0] || "").trim();

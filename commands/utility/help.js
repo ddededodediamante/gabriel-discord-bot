@@ -2,7 +2,8 @@ const {
   EmbedBuilder,
   ActionRowBuilder,
   ButtonBuilder,
-  ButtonStyle
+  ButtonStyle,
+  inlineCode
 } = require("discord.js");
 const { Text } = require("../../args.js");
 
@@ -58,7 +59,7 @@ module.exports = {
       const embed = new EmbedBuilder()
         .setTitle(title.join(" "))
         .setColor("Yellow")
-        .setDescription(cmd.description || "");
+        .setDescription(cmd.extDescription || cmd.description || "");
 
       if (cmd.category) {
         embed.addFields({ name: "Category", value: cmd.category, inline: true });
@@ -89,7 +90,7 @@ module.exports = {
       if (!byCategory.has(cat)) byCategory.set(cat, []);
       byCategory
         .get(cat)
-        .push(`- ${name}${cmd.description ? ": `" + cmd.description + "`" : ""}`);
+        .push(`- ${name}${cmd.description ? ": " + inlineCode(cmd.description) : ""}`);
     }
 
     const allEntries = [];

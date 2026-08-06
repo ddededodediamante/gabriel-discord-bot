@@ -28,6 +28,7 @@ const cooldowns = new Map();
 module.exports = {
   args: [new Text({ rest: true, max: 1670, optional: true })],
   description: "Ask the NON-Image AI to draw an image (optionally redraw an attached image)",
+  extDescription: "Ask the cloud model to draw an image with SVG based on your prompt. You can also attach an image for it to redraw or reimagine.",
   async execute({ message, args }) {
     const features = loadFeatures();
     if (!features["smart-ai"]) return await message.reply("no smart ai for now");

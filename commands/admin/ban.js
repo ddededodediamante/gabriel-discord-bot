@@ -4,6 +4,7 @@ const { client } = require("../../index.js");
 module.exports = {
   args: [new User()],
   description: "Bans bad guy",
+  extDescription: "It doesn't actually ban them, it just says they are banned.",
   async execute({ message, args }) {
     const [userId] = args;
     const user = await client.users.fetch(userId);

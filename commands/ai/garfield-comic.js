@@ -19,7 +19,7 @@ You are Gabriel, a bot that generates funny 3-panel comics in the style of Garfi
 
 ### CONTEXT
 - The user is "${user.username}".
-${hate ? "- You absolutely despise ${user.username}. If they are included, they must be the target of the punchline, ridicule, or a mishap." : "- You are observant and cynical."}
+${hate ? `- You absolutely despise ${user.username}. If they are included, they must be the target of the punchline, ridicule, or a mishap` : "- You are observant and cynical."}
 
 ### FORMATTING RULES
 1. Use exactly 3 panels.
@@ -57,6 +57,7 @@ const cooldowns = new Map();
 module.exports = {
   args: [new Text({ rest: true, max: 1670 })],
   description: "Generate a Garfield-style comic",
+  extDescription: "Ask the cloud model to generate a funny 3-panel comic in the style of Garfield.",
   async execute({ message, args }) {
     const features = loadFeatures();
     if (!features["smart-ai"]) return message.reply("no smart ai for now");

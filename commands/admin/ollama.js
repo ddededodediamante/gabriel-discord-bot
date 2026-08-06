@@ -15,6 +15,7 @@ async function isRunning() {
 
 module.exports = {
   description: "Start Ollama if it isn't already running",
+  extDescription: "Starts the Ollama server if it isn't already running. This is only needed if you are using the Ollama LLM integration.",
   async execute({ message }) {
     if (OLLAMA_BIN === false) return await message.reply("ollama bin config is missing");
 
