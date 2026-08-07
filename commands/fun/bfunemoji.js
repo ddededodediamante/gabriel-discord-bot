@@ -1,4 +1,4 @@
-const { EmbedBuilder, AttachmentBuilder } = require("discord.js");
+const { EmbedBuilder, AttachmentBuilder, inlineCode } = require("discord.js");
 const { Text, Num, Bool, Union } = require("../../args.js");
 const { client } = require("../../index.js");
 
@@ -9,16 +9,24 @@ const url = "https://library.penguinmod.com/files/emojis/";
 
 module.exports = {
   args: [new Text({ optional: true })],
-  aliases: ["pmemoji"],
+  aliases: ["pm-emoji", "penguinmod-emoji"],
   description: "Gets a random emoji from BFunEmoji",
   async execute({ message, args }) {
     let item;
 
     if (args[0] && args[0].trim() != "") {
-      if (items.includes(args[0])) {
-        item = args[0];
+      if (args[0] === "list") {
+        const attachment = new AttachmentBuilder(
+          Buffer.from(JSON.stringify(items, null, 2)),
+          { name: "emojis.json" }
+        );
+        return message.reply({ files: [attachment] });
       } else {
-        return message.reply("not a valid emoji");
+        if (items.includes(args[0])) {
+          item = args[0];
+        } else {
+          return message.reply("not a valid emoji");
+        }
       }
     } else {
       item = items[Math.floor(Math.random() * items.length)];

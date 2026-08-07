@@ -13,9 +13,9 @@ const levels = ["AHHH!!!", "highest", "higher", "high", "medium", "low"];
 
 module.exports = {
   args: [new Text({ optional: true, default: "high" })],
-  aliases: ["compress"],
+  aliases: ["compress", "compressvideo", "video-compress"],
   description: "Compress a video into oblivion",
-  extDescription: `Compresses a video. You can attach a video to the message, or reply to a message with a video.\nAvailable levels: ${levels.map(inlineCode).join(", ")}`,
+  extDescription: `Compresses a video. You can attach a video to the message, or reply to a message with a video.\nLevels: ${levels.map(inlineCode).join(", ")}`,
   async execute({ message, args }) {
     if (activeRequests.has(message.author.id)) {
       return message.reply("shut up and come back later");

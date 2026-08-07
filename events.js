@@ -5,7 +5,6 @@ const {
   config,
   isAdmin,
   loadFeatures,
-  getUserSettings,
   loadUserSettings,
   saveUserSettings,
   getServerSettings
@@ -51,7 +50,7 @@ module.exports = {
               message.author.send({ embeds: [welcomeEmbed] }).catch(() => {});
             }
             const features = loadFeatures();
-            const userSettings = getUserSettings(message.author.id);
+            const userSettings = message.author.settings;
             const serverDisabled =
               message.guild &&
               getServerSettings(message.guild.id)["disable-ai"];

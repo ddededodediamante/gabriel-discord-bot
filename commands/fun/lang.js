@@ -1,3 +1,4 @@
+const { codeBlock } = require("discord.js");
 const { Text } = require("../../args.js");
 const { client } = require("../../index.js");
 const path = require("path");
@@ -21,7 +22,7 @@ module.exports = {
         const tokens = tokenize(code);
         const parsed = parse(tokens);
         await message.reply(
-          `${tokens.length} token(s)\n` + "```\n" + JSON.stringify(parsed) + "\n```"
+          `${tokens.length} token(s)\n${codeBlock("json", JSON.stringify(parsed))}`
         );
       } else {
         console.error("Couldn't import lang from langlanglangsahur/index.js");

@@ -1,5 +1,4 @@
 const { Text } = require("../../args.js");
-const { getUserSettings, setUserSetting } = require("../../databases.js");
 
 const availableSettings = {
   "hide-from-leaderboard": {
@@ -20,9 +19,9 @@ const availableSettings = {
 module.exports = {
   args: [new Text({ rest: true, optional: true })],
   description: "View or change your user settings",
+  aliases: ["user-settings"],
   async execute({ message, args }) {
-    const userId = message.author.id;
-    const settings = getUserSettings(userId);
+    const settings = message.author.settings;
     const input = (args[0] || "").trim();
 
     if (!input || input === "list") {
@@ -55,7 +54,7 @@ module.exports = {
       return message.reply("state must be `on` or `off`");
     }
 
-    setUserSetting(userId, key, enabled);
+    message.author.settings[key] = enabled;
 
     message.reply(`setting \`${key}\` is now ${enabled ? "enabled" : "disabled"}`);
   }

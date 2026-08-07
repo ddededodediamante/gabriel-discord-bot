@@ -1,14 +1,34 @@
 const { Text } = require("../../args.js");
 const { client } = require("../../index.js");
-const { AttachmentBuilder } = require("discord.js");
+const { AttachmentBuilder, inlineCode } = require("discord.js");
 const { EdgeTTS } = require("node-edge-tts");
 const path = require("path");
 const os = require("os");
 const fs = require("fs");
 
+const voiceMap = {
+  aria: { voice: "en-US-AriaNeural", lang: "en-US" },
+  jenny: { voice: "en-US-JennyNeural", lang: "en-US" },
+  guy: { voice: "en-US-GuyNeural", lang: "en-US" },
+  davis: { voice: "en-US-DavisNeural", lang: "en-US" },
+  tony: { voice: "en-US-TonyNeural", lang: "en-US" },
+  nancy: { voice: "en-US-NancyNeural", lang: "en-US" },
+  sara: { voice: "en-US-SaraNeural", lang: "en-US" },
+  andrew: { voice: "en-US-AndrewNeural", lang: "en-US" },
+  emma: { voice: "en-US-EmmaNeural", lang: "en-US" },
+  brian: { voice: "en-US-BrianNeural", lang: "en-US" },
+  amy: { voice: "en-GB-AmyNeural", lang: "en-GB" },
+  ryan: { voice: "en-GB-RyanNeural", lang: "en-GB" },
+  libby: { voice: "en-GB-LibbyNeural", lang: "en-GB" },
+  natasha: { voice: "en-AU-NatashaNeural", lang: "en-AU" },
+  william: { voice: "en-AU-WilliamNeural", lang: "en-AU" }
+};
+
 module.exports = {
   args: [new Text({ optional: true, rest: true, max: 1670 })],
   description: "Turns text into speech (flags: `-rate`, `-pitch`, `-volume`, `-voice`)",
+  extDescription: `Generates a TTS audio file from the provided text and sends it in the channel.\nFlags: \`-rate\`, \`-pitch\`, \`-volume\`, \`-voice\`\nVoices: ${Object.keys(voiceMap).map(inlineCode).join(", ")}`,
+  aliases: ["text-to-speech", "texttospeech", "speak"],
   async execute({ message, args }) {
     const [rawInput] = args;
     const parts = rawInput ? rawInput.split(/\s+/) : [];
@@ -19,24 +39,6 @@ module.exports = {
       volume: "default",
       voice: "en-US-AriaNeural",
       lang: "en-US"
-    };
-
-    const voiceMap = {
-      aria: { voice: "en-US-AriaNeural", lang: "en-US" },
-      jenny: { voice: "en-US-JennyNeural", lang: "en-US" },
-      guy: { voice: "en-US-GuyNeural", lang: "en-US" },
-      davis: { voice: "en-US-DavisNeural", lang: "en-US" },
-      tony: { voice: "en-US-TonyNeural", lang: "en-US" },
-      nancy: { voice: "en-US-NancyNeural", lang: "en-US" },
-      sara: { voice: "en-US-SaraNeural", lang: "en-US" },
-      andrew: { voice: "en-US-AndrewNeural", lang: "en-US" },
-      emma: { voice: "en-US-EmmaNeural", lang: "en-US" },
-      brian: { voice: "en-US-BrianNeural", lang: "en-US" },
-      amy: { voice: "en-GB-AmyNeural", lang: "en-GB" },
-      ryan: { voice: "en-GB-RyanNeural", lang: "en-GB" },
-      libby: { voice: "en-GB-LibbyNeural", lang: "en-GB" },
-      natasha: { voice: "en-AU-NatashaNeural", lang: "en-AU" },
-      william: { voice: "en-AU-WilliamNeural", lang: "en-AU" }
     };
 
     const flagConfig = [

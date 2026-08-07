@@ -3,7 +3,7 @@ const path = require("path");
 
 module.exports = {
   args: [],
-  aliases: ["mangomustard"],
+  aliases: ["mango-mustard", "six-seven"],
   description: "HAHAHA 67 😂🤣",
   execute({ message, args }) {
     const attachment = new AttachmentBuilder(path.join(__dirname, "../../files/67.jpg"), {

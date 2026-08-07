@@ -1,4 +1,5 @@
 const { Client, GatewayIntentBits, Partials, Events } = require("discord.js");
+require("./functions/overrides.js");
 const { config, isAdmin } = require("./databases.js");
 
 const client = new Client({

@@ -9,6 +9,7 @@ const randomFrom = arr => arr[random(0, arr.length - 1)];
 module.exports = {
   args: [],
   description: "Create evil fake news",
+  aliases: ["fakenews"],
   execute({ message, args }) {
     const people = [
       "Toby Fox", "ddededodediamante", "Jeremy", "Albert Einstein", "Taylor Swift", "Tom Hanks",

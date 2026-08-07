@@ -32,8 +32,11 @@ module.exports = {
       clearCache("../../commands.js");
       clearCache("../../utils.js");
       clearCache("../../databases.js");
+      clearCache("../../functions/overrides.js");
       clearCache("../../args.js");
       clearCache("../../functions/powder.js");
+
+      require("../../functions/overrides.js");
 
       const { reloadEvents } = require("../../index.js");
       reloadEvents();

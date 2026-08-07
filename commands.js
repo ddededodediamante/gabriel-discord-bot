@@ -25,10 +25,21 @@ function loadCommands(dir, category = null) {
 
         cmd._primaryName = name;
         commands[name] = cmd;
+
         if (cmd.aliases && Array.isArray(cmd.aliases)) {
-          cmd.aliases.forEach(i => {
+          const allAliases = new Set(cmd.aliases);
+          const variants = [name, ...cmd.aliases];
+          variants.forEach(alias => {
+            const stripped = alias.replace(/-/g, "");
+            if (stripped !== alias) {
+              allAliases.add(stripped);
+            }
+          });
+
+          allAliases.forEach(i => {
             commands[i] = { ...cmd, _aliasOf: name };
           });
+          cmd.aliases = Array.from(allAliases);
         }
       } catch (e) {
         console.error(e);

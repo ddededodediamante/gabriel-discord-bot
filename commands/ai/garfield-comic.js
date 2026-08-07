@@ -1,6 +1,6 @@
 const { Text } = require("../../args.js");
 const { client } = require("../../index.js");
-const { loadFeatures, getUserSettings } = require("../../databases.js");
+const { loadFeatures } = require("../../databases.js");
 const OllamaChat = require("ollama-chatting");
 const { ollamaSemaphore } = require("../../utils.js");
 const { User } = require("discord.js");
@@ -73,7 +73,7 @@ module.exports = {
     const [question] = args;
     await message.channel.sendTyping();
 
-    const settings = getUserSettings(message.author.id);
+    const settings = message.author.settings;
     const funnyMode = question.startsWith("funny mode: ");
     const messages = [
       { role: "system", content: system(message.author, settings, funnyMode) },

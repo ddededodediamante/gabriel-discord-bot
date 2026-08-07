@@ -1,7 +1,9 @@
 const { Text, Num, Bool, User, Union } = require("../../args.js");
+
 module.exports = {
   args: [],
   description: "sends a random cat picture",
+  aliases: ["kitty", "cat-pic", "cat-picture", "cat-photo", "cat-image"],
   async execute({ message, args }) {
     try {
       const response = await fetch("https://api.thecatapi.com/v1/images/search");

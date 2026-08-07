@@ -7,7 +7,7 @@ const sharp = require("sharp");
 
 module.exports = {
   args: [],
-  aliases: ["compressimg"],
+  aliases: ["compress-img", "img-compress", "compressimage", "image-compress"],
   description: "Compress an image into oblivion",
   async execute({ message }) {
     const attachment = (await getAttachments(message))[0];

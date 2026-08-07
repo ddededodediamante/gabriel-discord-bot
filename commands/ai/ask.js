@@ -1,6 +1,6 @@
 const { Text } = require("../../args.js");
 const { client } = require("../../index.js");
-const { loadFeatures, getUserSettings, setUserSetting } = require("../../databases.js");
+const { loadFeatures } = require("../../databases.js");
 const OllamaChat = require("ollama-chatting");
 const { AttachmentBuilder, EmbedBuilder, User } = require("discord.js");
 const path = require("path");
@@ -111,7 +111,7 @@ module.exports = {
       userMessage.images = imageBuffers;
     }
 
-    const settings = getUserSettings(message.author.id);
+    const settings = { ...message.author.settings };
     if (question.startsWith("(british)")) settings["british"] = true;
 
     const messages = [
@@ -341,8 +341,8 @@ module.exports = {
             "Enable the assistant annoyed mode, use it when the user repeatedly annoys you.",
           parameters: { type: "object", properties: {} },
           callback: async () => {
-            const wasAlreadyHated = getUserSettings(message.author.id)["be-hated"] === true;
-            setUserSetting(message.author.id, "be-hated", true);
+            const wasAlreadyHated = message.author.settings["be-hated"] === true;
+            message.author.settings["be-hated"] = true;
             console.info(`${message.author.username} annoyed gabriel`);
             embeds.push(
               new EmbedBuilder()

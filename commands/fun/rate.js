@@ -1,7 +1,6 @@
 const { EmbedBuilder, AttachmentBuilder } = require("discord.js");
 const { Text, Num, Bool, Union } = require("../../args.js");
 const { client } = require("../../index.js");
-const { getUserSettings } = require("../../databases.js");
 
 function fnv1a(str) {
   let hash = 0x811c9dc5;
@@ -17,12 +16,13 @@ function fnv1a(str) {
 module.exports = {
   args: [new Text({ rest: true })],
   description: "Rates stuff based on cool math",
+  aliases: ["rate-stuff", "rate-thing"],
   execute({ message, args }) {
     const [thing] = args;
     const thingy = String(thing).toLowerCase();
     const rating = fnv1a(thingy) % 11;
 
-    const settings = getUserSettings(message.author.id);
+    const settings = message.author.settings;
     if (settings["be-hated"] === true) {
       if (
         thingy.includes(message.author.username) ||
