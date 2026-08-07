@@ -9,7 +9,7 @@ function wrap(text) {
 module.exports = {
   args: [new Text({ rest: true })],
   description: "Secret evil eval",
-  extDescription: "Evaluates code and returns the result.",
+  extDescription: "Evaluates JavaScript code and returns the result.",
   async execute({ message, args }) {
     try {
       const result = eval(args[0] || "");

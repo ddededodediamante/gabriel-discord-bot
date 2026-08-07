@@ -26,21 +26,28 @@ function loadCommands(dir, category = null) {
         cmd._primaryName = name;
         commands[name] = cmd;
 
-        if (cmd.aliases && Array.isArray(cmd.aliases)) {
-          const allAliases = new Set(cmd.aliases);
-          const variants = [name, ...cmd.aliases];
-          variants.forEach(alias => {
-            const stripped = alias.replace(/-/g, "");
-            if (stripped !== alias) {
-              allAliases.add(stripped);
-            }
-          });
+        const allAliases = new Set();
 
-          allAliases.forEach(i => {
-            commands[i] = { ...cmd, _aliasOf: name };
-          });
-          cmd.aliases = Array.from(allAliases);
+        if (cmd.aliases && Array.isArray(cmd.aliases)) {
+          cmd.aliases.forEach(a => allAliases.add(a.toLowerCase()));
         }
+
+        const itemsToProcess = [name, ...Array.from(allAliases)];
+
+        itemsToProcess.forEach(item => {
+          const stripped = item.replace(/-/g, "");
+          if (stripped !== item && stripped.length > 0) {
+            allAliases.add(stripped);
+          }
+        });
+
+        allAliases.forEach(alias => {
+          if (!commands[alias]) {
+            commands[alias] = { ...cmd, _aliasOf: name };
+          }
+        });
+
+        cmd.aliases = Array.from(allAliases).sort();
       } catch (e) {
         console.error(e);
       }

@@ -2,7 +2,7 @@ const { AttachmentBuilder } = require("discord.js");
 const { Text } = require("../../args.js");
 const fs = require("fs");
 const path = require("path");
-const os = require("os")
+const os = require("os");
 const https = require("https");
 const { execFile } = require("child_process");
 const { getAttachments } = require("../../utils.js");
@@ -26,8 +26,8 @@ function getAtempoFilter(targetSpeed) {
 
 module.exports = {
   args: [new Text({ rest: true, optional: true, default: "" })],
-  description:
-    "Modify an audio track with some filters (pitch, speed, reverse, muffle, bassboost)",
+  description: "Modify an audio track with some filters",
+  extDescription: `Modifies an audio track. You can attach an audio to the message, or reply to a message with an audio.\nFlags: \`-pitch <num>\`, \`-speed <num>\`, \`-reverse\`, \`-muffle\`, \`-bassboost\``,
   async execute({ message, args }) {
     const [rawInput] = args;
 
