@@ -1,6 +1,6 @@
 const { Client, GatewayIntentBits, Partials, Events } = require("discord.js");
 require("./functions/overrides.js");
-const { config, isAdmin } = require("./databases.js");
+const { config } = require("./databases.js");
 
 const client = new Client({
   intents: Object.values(GatewayIntentBits),
@@ -27,7 +27,7 @@ function reloadEvents() {
   for (const [eventName, def] of Object.entries(events)) {
     const listener = async (...args) => {
       try {
-        await def.execute(...args, { client, config, isAdmin });
+        await def.execute(...args, { client, config });
       } catch (err) {
         console.error(`Error in event "${eventName}":`, err);
       }

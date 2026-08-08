@@ -97,17 +97,8 @@ function getServerSettings(guildId) {
   return { ...DEFAULT_SERVER_SETTINGS, ...data[guildId] };
 }
 
-/**
- * @param {import("discord.js").User | null | undefined} user
- * @returns {boolean}
- */
-function isAdmin(user) {
-  return config.admins.includes(user?.id);
-}
-
 module.exports = {
   config,
-  isAdmin,
   loadFeatures,
   saveFeatures,
   loadUserSettings,

@@ -21,7 +21,10 @@ Here is each config value explained:
   "token": "...", // Token for your Discord bot
   "userId": "...", // User ID of your Discord bot
   "prefix": "gabriel!", // Prefix used to run commands. (e.g. abc -> abc!help)
-  "admins": ["..."], // An array of user IDs to mark as admin.
+  "permissions": { // Object with permissions for different things
+    "evalPerms": ["..."], // User IDs to give access to the eval command
+    "admins": ["..."] // User IDs to mark as admin (allow them to run admin commands)
+  },
   "suggestionChannel": "...", // Channel ID where suggestions are sent from the suggestion command.
   "ollamaBin": "...this/is/a/path/ollama.exe", // Path where ollama's executable is located at.
   "ollamaHost": "http://localhost:11434" // URL to ollama once it is served.

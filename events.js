@@ -3,7 +3,6 @@ const commands = require("./commands.js");
 const { parseCommandArgs, tokenize } = require("./args.js");
 const {
   config,
-  isAdmin,
   loadFeatures,
   loadUserSettings,
   saveUserSettings,
@@ -20,7 +19,7 @@ module.exports = {
     async execute(message) {
       if (message.author.bot) return;
 
-      message.isAdmin = isAdmin(message.author);
+      message.isAdmin = message.author.isBotAdmin;
 
       const content = message.content.trim();
 
@@ -37,14 +36,19 @@ module.exports = {
           if (botMsg?.author.id === client.user.id && botMsg.content !== "") {
             const allSettings = loadUserSettings();
             if (!allSettings[message.author.id]) {
-              allSettings[message.author.id] = { "hide-from-leaderboard": false, "be-hated": false, "no-reply": false, "no-human": false };
+              allSettings[message.author.id] = {
+                "hide-from-leaderboard": false,
+                "be-hated": false,
+                "no-reply": false,
+                "no-human": false
+              };
               saveUserSettings(allSettings);
               const welcomeEmbed = new EmbedBuilder()
                 .setColor("Gold")
                 .setTitle("Welcome to Gabriel!")
                 .setDescription(
                   "Looks like this is your first time here! You can customize your experience with user settings.\n\n" +
-                  "Run `gabriel!settings` to see what's available: hiding from leaderboards, disabling AI replies, and more."
+                    "Run `gabriel!settings` to see what's available: hiding from leaderboards, disabling AI replies, and more."
                 )
                 .setFooter({ text: "This message only shows once." });
               message.author.send({ embeds: [welcomeEmbed] }).catch(() => {});
@@ -52,8 +56,7 @@ module.exports = {
             const features = loadFeatures();
             const userSettings = message.author.settings;
             const serverDisabled =
-              message.guild &&
-              getServerSettings(message.guild.id)["disable-ai"];
+              message.guild && getServerSettings(message.guild.id)["disable-ai"];
             if (userSettings["no-reply"] !== true && !serverDisabled) {
               if (features["smart-ai"]) {
                 const askCmd = require("./commands/ai/ask.js");
@@ -64,8 +67,7 @@ module.exports = {
                   message,
                   args: [question],
                   client,
-                  config,
-                  isAdmin
+                  config
                 });
               } else {
                 await message.reply("ok");
@@ -76,7 +78,7 @@ module.exports = {
         }
 
         if (!isDirectMention) return;
-        return await message.reply(isAdmin(message.author) ? "hi" : "what do you want");
+        return await message.reply(message.author.isBotAdmin ? "hi" : "what do you want");
       }
 
       if (!startsWithPrefix) return;
@@ -96,7 +98,7 @@ module.exports = {
       const cmd = commands[cmdName];
       if (!cmd) {
         return message.reply("what does that mean");
-      } else if (cmd.adminOnly && !isAdmin(message.author)) {
+      } else if (cmd.adminOnly && !message.author.isBotAdmin) {
         return message.reply("no haha");
       } else if (
         cmd.category === "ai" &&
@@ -125,14 +127,19 @@ module.exports = {
 
       const allSettings = loadUserSettings();
       if (!allSettings[message.author.id]) {
-        allSettings[message.author.id] = { "hide-from-leaderboard": false, "be-hated": false, "no-reply": false, "no-human": false };
+        allSettings[message.author.id] = {
+          "hide-from-leaderboard": false,
+          "be-hated": false,
+          "no-reply": false,
+          "no-human": false
+        };
         saveUserSettings(allSettings);
         const welcomeEmbed = new EmbedBuilder()
           .setColor("Gold")
           .setTitle("Welcome to Gabriel!")
           .setDescription(
             "Looks like this is your first time here! You can customize your experience with user settings.\n\n" +
-            "Run `gabriel!settings` to see what's available: hiding from leaderboards, disabling AI replies, and more."
+              "Run `gabriel!settings` to see what's available: hiding from leaderboards, disabling AI replies, and more."
           )
           .setFooter({ text: "This message only shows once." });
         message.author.send({ embeds: [welcomeEmbed] }).catch(() => {});
@@ -143,8 +150,7 @@ module.exports = {
           message,
           args: parsed.args,
           client,
-          config,
-          isAdmin
+          config
         });
       } catch (err) {
         console.error(err);

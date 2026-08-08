@@ -1,5 +1,19 @@
 const { User } = require("discord.js");
-const { setUserSetting, getUserSettings } = require("../databases");
+const { setUserSetting, getUserSettings, config } = require("../databases");
+
+Object.defineProperty(User.prototype, "isBotAdmin", {
+  configurable: true,
+  get() {
+    return config.permissions.admins.includes(this.id);
+  }
+});
+
+Object.defineProperty(User.prototype, "hasBotEvalPerms", {
+  configurable: true,
+  get() {
+    return config.permissions.evalPerms.includes(this.id);
+  }
+});
 
 Object.defineProperty(User.prototype, "settings", {
   configurable: true,

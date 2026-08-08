@@ -25,7 +25,7 @@ function clearCommandsCache(dir) {
 module.exports = {
   args: [new Text({ rest: true, optional: true })],
   description: "Reload commands and events, optionally run a command after",
-  async execute({ message, args, client, config, isAdmin }) {
+  async execute({ message, args, client, config }) {
     try {
       clearCommandsCache(path.join(__dirname, "../../commands"));
 
@@ -76,7 +76,7 @@ module.exports = {
         );
       }
 
-      await cmd.execute({ message, args: parsed.args, client, config, isAdmin });
+      await cmd.execute({ message, args: parsed.args, client, config });
     } catch (err) {
       console.error(err);
       message.reply("❌ Failed to reload:\n```js\n" + err.message + "\n```");
