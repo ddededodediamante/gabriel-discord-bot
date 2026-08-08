@@ -6,7 +6,7 @@ const { client } = require("../../index.js");
 const sentiment = new Sentiment();
 
 module.exports = {
-  args: [new Text({ rest: true, optional: true })],
+  args: [new Text({ rest: true, optional: true, max: 967 })],
   description: "Analyzes the sentiment of a message or the recent channel chat",
   aliases: ["howami", "sentiment"],
   async execute({ message, args }) {
@@ -33,29 +33,38 @@ module.exports = {
       label = "Recent chat";
     }
     const fields = [
-      { name: label, value: text ? `> ${text}` : "last 10 messages", inline: false },
+      {
+        name: label,
+        value: text ? `> ${text}` : "last 10 messages (from everyone not just you)",
+        inline: false
+      },
       { name: "Score", value: String(result.score), inline: true },
       { name: "Comparative", value: result.comparative.toFixed(2), inline: true }
     ];
     const positive = [...new Set(result.positive)];
     const negative = [...new Set(result.negative)];
+    let positiveValue = positive.map(inlineCode).join(", ");
+    let negativeValue = negative.map(inlineCode).join(", ");
+    if (positiveValue.length >= 1000) positiveValue = "why so positive?";
+    if (negativeValue.length >= 1000) negativeValue = "why so negative?";
+
     if (positive.length) {
       fields.push({
-        name: "Positive",
-        value: positive.map(inlineCode).join(", "),
+        name: `Positive (${positive.length})`,
+        value: positiveValue,
         inline: false
       });
     }
     if (negative.length) {
       fields.push({
-        name: "Negative",
-        value: negative.map(inlineCode).join(", "),
+        name: `Negative (${negative.length})`,
+        value: negativeValue,
         inline: false
       });
     }
 
     const embed = new EmbedBuilder()
-      .setColor(result.score >= 0 ? "Green" : "Red")
+      .setColor(result.score === 0 ? "Blurple" : result.score >= 0 ? "Green" : "Red")
       .addFields(fields);
 
     return message.reply({ embeds: [embed] });

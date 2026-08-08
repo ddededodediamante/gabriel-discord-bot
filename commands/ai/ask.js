@@ -68,6 +68,8 @@ module.exports = {
     const [question] = args;
     await message.channel.sendTyping();
 
+    if (question && question !== "") console.log(`[ask] ${message.author.username} (${message.author.id}): ${question}`);
+
     const imageAttachments = (await getAttachments(message)).filter(
       a => a.contentType?.startsWith("image/") && a.size < 2 * 1024 * 1024
     );
@@ -351,7 +353,7 @@ module.exports = {
         model: "gemma4:31b-cloud",
         messages,
         tools: aiTools,
-        timeout: 120000,
+        timeout: 8000,
         options: { temperature: settings["no-human"] === true ? 0.1 : 0.6 }
       });
 

@@ -73,6 +73,8 @@ module.exports = {
     const [question] = args;
     await message.channel.sendTyping();
 
+    if (question && question !== "") console.log(`[rap song] ${message.author.username} (${message.author.id}): ${userTopic}`);
+
     const settings = message.author.settings;
     const funnyMode = question.startsWith("funny mode: ");
     const messages = [

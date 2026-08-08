@@ -39,7 +39,7 @@ module.exports = {
     const [topic] = args;
     const userTopic = topic || "freestyle rap about anything";
 
-    console.log(`[rap song] ${message.author.username}: ${userTopic}`);
+    console.log(`[rap song] ${message.author.username} (${message.author.id}): ${userTopic}`);
 
     const reply = await message.reply("generating rap lyrics...");
 

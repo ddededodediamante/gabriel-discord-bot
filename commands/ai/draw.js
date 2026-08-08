@@ -56,7 +56,7 @@ module.exports = {
       content: prompt || "Redraw this image in your own style"
     };
 
-    if (prompt && prompt != "") console.log(`[draw] ${message.author.username}: ${prompt}`);
+    if (prompt && prompt != "") console.log(`[draw] ${message.author.username} (${message.author.id}): ${prompt}`);
 
     const attachments = await getAttachments(message);
     const imageAttachment = attachments.find(a => a.contentType?.startsWith("image/"));

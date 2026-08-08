@@ -26,7 +26,7 @@ const voiceMap = {
 
 module.exports = {
   args: [new Text({ optional: true, rest: true, max: 1670 })],
-  description: "Turns text into speech (flags: `-rate`, `-pitch`, `-volume`, `-voice`)",
+  description: "Turns text into speech",
   extDescription: `Generates a TTS audio file from the provided text and sends it in the channel.\nFlags: \`-rate\`, \`-pitch\`, \`-volume\`, \`-voice\`\nVoices: ${Object.keys(voiceMap).map(inlineCode).join(", ")}`,
   aliases: ["text-to-speech", "texttospeech", "speak"],
   async execute({ message, args }) {
