@@ -21,7 +21,7 @@ module.exports = {
   args: [new Text({ optional: true, rest: true, max: 500 })],
   description: "Generate a rap song with AI lyrics and TTS vocals over a beat",
   extDescription: "Ask the cloud model to generate rap lyrics about a topic, then use TTS to create vocals and mix them with a beat. The output is an audio file.",
-  aliases: ["rap"],
+  aliases: ["rap", "rap-song", "create-song"],
   async execute({ message, args }) {
     const features = loadFeatures();
     if (!features["smart-ai"]) return message.reply("no smart ai for now");

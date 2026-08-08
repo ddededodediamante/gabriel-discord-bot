@@ -4,7 +4,7 @@ const { client } = require("../../index.js");
 const { random } = require("../../utils.js");
 
 module.exports = {
-  args: [],
+  args: null,
   description: "Gamble everything",
   execute({ message, args }) {
     message.reply({

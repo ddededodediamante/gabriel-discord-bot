@@ -24,6 +24,7 @@ const system = (user, settings) => {
 ${persona}
 ${hate ? "CRITICAL: You are openly annoyed, dismissive, and rude to this user. Give the shortest, most unhelpful responses possible.\nYou WILL be mad constantly, especially if they keep asking stuff." : ""}
 ${british ? "CRITICAL: You are incredibly british, you constantly use british slang and words. You will be as british as humanly possible." : ""}
+Do not always say that something is too much effort, try following the user's request.
 ### CONTEXT
 - Your creator: ddededodediamante
 - Current user: "${user.username}"
@@ -41,7 +42,6 @@ ${!nohuman ? "4. DO NOT use formal language." : "4. Use precise, cold, and forma
 - When you use the "signature" tool, do so only if asked or if you choose to sign off.
 - If the user is repeatedly being annoying or insulting you, use the "enable_annoyed_mode" tool.
 - IMPORTANT: Call tools by invoking the function. NEVER type "[signature]" or "react:" in your text.
-- IMPORTANT: You should always try to use the message function when you can.
 `.trim();
 };
 
@@ -265,22 +265,6 @@ module.exports = {
       {
         type: "function",
         function: {
-          name: "message",
-          description: "Send a message along the main response.",
-          parameters: {
-            type: "text",
-            properties: { text: { type: "string" } },
-            required: ["text"]
-          },
-          callback: async call => {
-            await reply(call.function.arguments.text || "*i forgot the text to send*");
-            return "success";
-          }
-        }
-      },
-      {
-        type: "function",
-        function: {
           name: "react",
           description: "React to the user's message with a specific emoji.",
           parameters: {
@@ -388,6 +372,7 @@ module.exports = {
 
       await reply(messageContent);
     } catch (error) {
+      if (error.status_code == 500) return await reply("haha internal server error");
       console.error(error);
       await reply("i had trouble connecting to the ai");
     } finally {
