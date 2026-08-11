@@ -141,11 +141,12 @@ module.exports = {
         /* empty */
       }
     } catch (error) {
+      if (error?.status_code == 500) return await message.reply("haha internal server error");
       const err = String(error.message || error);
       const isCorrupt = err.toLowerCase().includes("corrupt header");
       if (!isCorrupt) console.error(error);
       await message.reply(
-        isCorrupt ? `the ai didn't generate a valid svg` : "i had trouble drawing that"
+        isCorrupt ? `the ai didn't generate a valid svg` : `i had trouble drawing that\n-# possible issues: ollama isn't running or it timed out`
       );
       try {
         await initialReply.delete();

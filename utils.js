@@ -17,7 +17,8 @@ const filter = new Filter({
   detectLeetspeak: true,
   leetspeakLevel: "aggressive",
   normalizeUnicode: true,
-  caseSensitive: false
+  caseSensitive: false,
+  ignoreWords: ["fuck", "shit", "piss"]
 });
 
 function hasBadWords(string) {
@@ -32,6 +33,7 @@ function hasBadWords(string) {
 function random(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
+  if (min > max) [min, max] = [max, min];
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 

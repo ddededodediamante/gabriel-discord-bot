@@ -6,7 +6,7 @@ const { client } = require("../../index.js");
 const sentiment = new Sentiment();
 
 module.exports = {
-  args: [new Text({ rest: true, optional: true, max: 967 })],
+  args: [new Text({ rest: true, optional: true, max: 1670 })],
   description: "Analyzes the sentiment of a message or the recent channel chat",
   aliases: ["howami", "sentiment"],
   async execute({ message, args }) {

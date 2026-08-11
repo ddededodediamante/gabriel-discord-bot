@@ -28,7 +28,7 @@ module.exports = {
   args: [new Text({ rest: true, max: 670 })],
   description: "Ask the local model something",
   extDescription: "Ask the local model a question. Might be slower than normal ask command.",
-  aliases: ["slow-ass-model", "local-ask"],
+  aliases: ["slow-ass-model", "local-ask", "ai"],
   async execute({ message, args }) {
     const features = loadFeatures();
     if (!features["smart-ai"]) return message.reply("no smart ai for now");
@@ -102,8 +102,9 @@ module.exports = {
         }
       });
     } catch (error) {
+      if (error?.status_code == 500) return await message.reply("haha internal server error");
       console.error(error);
-      await message.reply("i had trouble connecting to the ai");
+      await message.reply(`i had trouble connecting to the ai\n-# possible issues: ollama isn't running or it timed out`);
     } finally {
       ollamaSemaphore.release();
       clear();

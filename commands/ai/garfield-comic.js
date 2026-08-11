@@ -27,11 +27,15 @@ ${hate ? `- You absolutely despise ${user.username}. If they are included, they 
 3. Do not add extra text outside of the panel structure.
 4. Keep dialogue short, funny and punchy.
 5. Add a really short description of each panel, start them with "-#".
-${funnyMode ? `6. A guy named Jeremy will come in, mentioning how they're always ready for a light snack.
+${
+  funnyMode
+    ? `6. A guy named Jeremy will come in, mentioning how they're always ready for a light snack.
 7. Odie will always show up.
 8. Lasagna is always mentioned
 9. Herobrine from Minecraft will sometimes show up and say "You were supposed to be a hero, brine!
-10. Fursuits are awesome."` : ""}
+10. Fursuits are awesome."`
+    : ""
+}
 
 ### EXAMPLE OUTPUT
 **Panel 1:**
@@ -57,7 +61,8 @@ const cooldowns = new Map();
 module.exports = {
   args: [new Text({ rest: true, max: 1670 })],
   description: "Generate a Garfield-style comic",
-  extDescription: "Ask the cloud model to generate a funny 3-panel comic in the style of Garfield.",
+  extDescription:
+    "Ask the cloud model to generate a funny 3-panel comic in the style of Garfield.",
   async execute({ message, args }) {
     const features = loadFeatures();
     if (!features["smart-ai"]) return message.reply("no smart ai for now");
@@ -73,7 +78,10 @@ module.exports = {
     const [question] = args;
     await message.channel.sendTyping();
 
-    if (question && question !== "") console.log(`[rap song] ${message.author.username} (${message.author.id}): ${userTopic}`);
+    if (question && question !== "")
+      console.log(
+        `[garfield comic] ${message.author.username} (${message.author.id}): ${question}`
+      );
 
     const settings = message.author.settings;
     const funnyMode = question.startsWith("funny mode: ");
@@ -113,8 +121,12 @@ module.exports = {
         allowedMentions: { repliedUser: false }
       });
     } catch (error) {
+      if (error?.status_code == 500)
+        return await message.reply("haha internal server error");
       console.error(error);
-      await message.reply("i had trouble connecting to the ai");
+      await message.reply(
+        `i had trouble connecting to the ai\n-# possible issues: ollama isn't running or it timed out`
+      );
     } finally {
       ollamaSemaphore.release();
       clear();

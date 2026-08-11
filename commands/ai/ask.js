@@ -374,9 +374,9 @@ module.exports = {
 
       await reply(messageContent);
     } catch (error) {
-      if (error.status_code == 500) return await reply("haha internal server error");
+      if (error?.status_code == 500) return await reply("haha internal server error");
       console.error(error);
-      await reply("i had trouble connecting to the ai");
+      await reply(`i had trouble connecting to the ai\n-# possible issues: ollama isn't running or it timed out`);
     } finally {
       ollamaSemaphore.release();
       clear();

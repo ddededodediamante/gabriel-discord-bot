@@ -153,7 +153,7 @@ module.exports = {
     } catch (error) {
       console.error("Error generating rap song:", error);
       try {
-        await reply.edit("there was an error generating the rap song :(");
+        await reply.edit(`there was an error generating the rap song :(\n-# possible issues: ollama isn't running or the TTS/audio mixer request timed out`);
       } catch (_) {}
     } finally {
       clear();
