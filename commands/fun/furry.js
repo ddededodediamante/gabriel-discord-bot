@@ -47,6 +47,8 @@ module.exports = {
       message.reply("they have cat ears so probably");
     else if (has("furry")) message.reply('their username says "furry" so probably');
     else if (has("fur")) message.reply('their username says "fur" so probably');
+    else if (has("paws")) message.reply('their username says "paws" so probably');
+    else if (has("pawz")) message.reply('their username says "pawz" so probably');
     else if (has("protogen")) message.reply('their username says "protogen" so probably');
     else if (has("proto")) message.reply('their username says "proto" so probably');
     else if (userId === client.user.id) message.reply(":3");

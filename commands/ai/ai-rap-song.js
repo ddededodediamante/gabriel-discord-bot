@@ -20,8 +20,9 @@ Each line should be on its own line.`;
 module.exports = {
   args: [new Text({ optional: true, rest: true, max: 500 })],
   description: "Generate a rap song with AI lyrics and TTS vocals over a beat",
-  extDescription: "Ask the cloud model to generate rap lyrics about a topic, then use TTS to create vocals and mix them with a beat. The output is an audio file.",
-  aliases: ["rap", "rap-song", "create-song"],
+  extDescription:
+    "Ask the cloud model to generate rap lyrics about a topic, then use TTS to create vocals and mix them with a beat. The output is an audio file.",
+  aliases: ["ai-rap"],
   async execute({ message, args }) {
     const features = loadFeatures();
     if (!features["smart-ai"]) return message.reply("no smart ai for now");
@@ -39,7 +40,9 @@ module.exports = {
     const [topic] = args;
     const userTopic = topic || "freestyle rap about anything";
 
-    console.log(`[rap song] ${message.author.username} (${message.author.id}): ${userTopic}`);
+    console.log(
+      `[rap song] ${message.author.username} (${message.author.id}): ${userTopic}`
+    );
 
     const reply = await message.reply("generating rap lyrics...");
 
@@ -153,7 +156,9 @@ module.exports = {
     } catch (error) {
       console.error("Error generating rap song:", error);
       try {
-        await reply.edit(`there was an error generating the rap song :(\n-# possible issues: ollama isn't running or the TTS/audio mixer request timed out`);
+        await reply.edit(
+          `there was an error generating the rap song :(\n-# possible issues: ollama isn't running or the TTS/audio mixer request timed out`
+        );
       } catch (_) {}
     } finally {
       clear();
