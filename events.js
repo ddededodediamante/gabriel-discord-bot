@@ -44,7 +44,7 @@ module.exports = {
               };
               saveUserSettings(allSettings);
               const welcomeEmbed = new EmbedBuilder()
-                .setColor("Gold")
+                .setColor("Yellow")
                 .setTitle("Welcome to Gabriel!")
                 .setDescription(
                   "Looks like this is your first time here! You can customize your experience with user settings.\n\n" +
@@ -108,12 +108,7 @@ module.exports = {
         return message.reply("ai is disabled in this server");
       }
 
-      let rawTokens = [];
-      try {
-        rawTokens = rawArgsText ? tokenize(rawArgsText) : [];
-      } catch {
-        return message.reply("bad quoted string 🤓");
-      }
+      const rawTokens = rawArgsText ? tokenize(rawArgsText) : [];
 
       const parsed = parseCommandArgs(cmd.args, rawTokens);
       if (!parsed.ok) {
@@ -135,7 +130,7 @@ module.exports = {
         };
         saveUserSettings(allSettings);
         const welcomeEmbed = new EmbedBuilder()
-          .setColor("Gold")
+          .setColor("Yellow")
           .setTitle("Welcome to Gabriel!")
           .setDescription(
             "Looks like this is your first time here! You can customize your experience with user settings.\n\n" +

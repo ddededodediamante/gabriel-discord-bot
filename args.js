@@ -207,26 +207,9 @@ function tokenize(text) {
     while (i < text.length && text[i] === " ") i++;
     if (i >= text.length) break;
 
-    if (text[i] === '"') {
-      let s = "";
-      i++;
-      while (i < text.length && text[i] !== '"') {
-        if (text[i] === "\\" && i + 1 < text.length) {
-          i++;
-          s += text[i];
-        } else {
-          s += text[i];
-        }
-        i++;
-      }
-      if (i >= text.length) throw new Error("unterminated quoted string");
-      i++;
-      tokens.push(s);
-    } else {
-      let s = "";
-      while (i < text.length && text[i] !== " ") s += text[i++];
-      tokens.push(s);
-    }
+    let s = "";
+    while (i < text.length && text[i] !== " ") s += text[i++];
+    tokens.push(s);
   }
 
   return tokens;

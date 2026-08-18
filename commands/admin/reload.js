@@ -36,6 +36,12 @@ module.exports = {
       clearCache("../../args.js");
       clearCache("../../functions/powder.js");
 
+      if (fs.existsSync("C:/Projects/langlanglangsahur/")) {
+        clearCache("C:/Projects/langlanglangsahur/src/tokenizer.js");
+        clearCache("C:/Projects/langlanglangsahur/src/parser.js");
+        clearCache("C:/Projects/langlanglangsahur/src/evaluator.js");
+      }
+
       require("../../functions/overrides.js");
 
       const { reloadEvents } = require("../../index.js");
