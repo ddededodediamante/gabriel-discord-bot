@@ -56,5 +56,6 @@ function loadCommands(dir, category = null) {
 }
 
 loadCommands(path.join(__dirname, "commands"));
+loadCommands(path.join(__dirname, "commands-local"));
 
 module.exports = commands;
