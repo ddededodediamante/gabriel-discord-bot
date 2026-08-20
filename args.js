@@ -235,7 +235,7 @@ function parseCommandArgs(argDefs, tokens) {
     const def = argDefs[i];
     const label = `argument ${i + 1}: \`${def.describe()}\``;
 
-    if (def instanceof Text && def.rest) {
+    if (def.rest && def.constructor.name === "Text") {
       if (ti >= tokens.length) {
         if (def.optional) {
           result.push(def.default ?? null);
