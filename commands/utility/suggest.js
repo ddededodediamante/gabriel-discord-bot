@@ -1,6 +1,7 @@
-const { EmbedBuilder, AttachmentBuilder } = require("discord.js");
+const { EmbedBuilder, AttachmentBuilder, escapeMaskedLink } = require("discord.js");
 const { Text, Num, Bool, Union } = require("../../args.js");
 const { client } = require("../../index.js");
+const { getAttachments } = require("../../utils.js");
 
 module.exports = {
   args: [new Text({ rest: true, max: 1000 })],
@@ -8,9 +9,7 @@ module.exports = {
   async execute({ message, args }) {
     const [suggestion] = args;
 
-    const channel = await client.channels.fetch(
-      client.config.suggestionChannel,
-    );
+    const channel = await client.channels.fetch(client.config.suggestionChannel);
     if (!channel) return message.reply("suggestion channel not found");
 
     const embed = new EmbedBuilder()
@@ -19,18 +18,27 @@ module.exports = {
       .setColor("Yellow")
       .setAuthor({
         name: `${message.author.tag}`,
-        iconURL: message.author.displayAvatarURL(),
+        iconURL: message.author.displayAvatarURL()
       })
-      .setFooter({ text: message.author.id });
+      .setFooter({ text: `User ID: ${message.author.id}` });
 
-    const msg = await channel.send({ embeds: [embed] });
+    const content = (await getAttachments(message))
+      .map(i => i.url)
+      .join(" ")
+      .trim();
+
+    const msg = await channel.send({
+      content,
+      embeds: [embed],
+      allowedMentions: { parse: [] }
+    });
 
     await message.reply(
-      "ok i sent the suggestion (you will be told in DMs the status of your suggestion)",
+      "ok i sent the suggestion (you will be told in DMs the status of your suggestion)"
     );
 
     await msg.react("✅");
     await msg.react("❌");
     await msg.react("🔪");
-  },
+  }
 };
